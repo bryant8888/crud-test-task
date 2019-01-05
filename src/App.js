@@ -9,7 +9,7 @@ class App extends Component {
   }
 
   postPost() {
-    console.log('Bootstrap is not installed');
+
     axios
         .post('http://localhost:3000/posts', { "id": Math.random(), "title": "json-server", "author": "typicode" })
         .then((response) => console.log(response.data));

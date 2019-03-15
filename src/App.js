@@ -5,6 +5,7 @@ import ContentEditable from "react-contenteditable";
 import {TaskEntity} from "./entities/task-entity";
 import TaskAddForm from './components/task-add-form';
 import {TaskListItem} from "./components/task-list-item/task-list-item";
+import {TaskList} from "./components/task-list/task-list";
 
 class App extends Component {
   state = {
@@ -128,32 +129,18 @@ class App extends Component {
 
   render() {
 
-    const taskList = () => {
-
-        let classNames = 'todo-text';
-        if (this.props.isEditable) {
-            classNames += ' editable';
-        }
-        //setTimeout(() => console.log(this.props.isEditable, this.state.tasks[0].isEditable), 1000);
-
-          return (
-              <ul className="list-group">{this.state.tasks.map(task =>
-                  <TaskListItem key={task.id}
-                                handleChangeTask={this.handleChangeTask.bind(this, task.id)}
-                                editSubmit={this.editSubmit.bind(this, task.id, task.isEditable)}
-                                deleteSubmit={this.deleteSubmit.bind(this, task.id)}
-                                task={task} title={this.titleHTML(task)} />)}
-              </ul>
-          )
-    };
-
     return (
       <div className="app-todo">
         <h1>My todo List</h1>
         <TaskAddForm
             handleSubmit={this.handleSubmit.bind(this)}
             handleChange={this.handleChange.bind(this)}/>
-        {taskList()}
+        <TaskList
+            handleChangeTask={this.handleChangeTask}
+            editSubmit={this.editSubmit}
+            deleteSubmit={this.deleteSubmit}
+            tasks={this.state.tasks}
+            titleHTML={this.titleHTML}/>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import './task-list-item.css';
 import ContentEditable from "react-contenteditable";
+import {UButton} from "../reusable-components/UButton";
 
 export class TaskListItem extends React.Component {
     render() {
@@ -15,16 +16,12 @@ export class TaskListItem extends React.Component {
                     disabled={!task.isEditable}
                     onChange={this.props.handleChangeTask}/>
 
-                <button type="button"
-                        className="btn btn-outline-success btn-sm float-right"
-                        onClick={this.props.editSubmit}>
+                <UButton onClick={this.props.editSubmit} colorScheme={'success'}>
                     <i className="far fa-edit" />
-                </button>
-                <button type="button"
-                        className="btn btn-outline-danger btn-sm float-right"
-                        onClick={this.props.deleteSubmit}>
+                </UButton>
+                <UButton onClick={this.props.deleteSubmit} colorScheme={'danger'}>
                     <i className="fas fa-trash-alt" />
-                </button>
+                </UButton>
             </li>);
     };
 }

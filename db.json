@@ -1,54 +1,28 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Сделать зарядку",
+      "id": 0.4768545746162429,
+      "isEditable": true
     },
     {
-      "id": 0.055432300949920466,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Поставить задачи на день",
+      "id": 0.9692908288851168,
+      "isEditable": false
     },
     {
-      "id": 0.2947894075088888,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Сходить в магазин за продуктами",
+      "id": 0.586461131764054,
+      "isEditable": false
     },
     {
-      "id": 0.852333143101061,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "Завершить круд",
+      "id": 0.574342420904127,
+      "isEditable": false
     },
     {
-      "id": 0.24387601047267893,
-      "title": "json-server",
-      "author": "typicode"
-    },
-    {
-      "id": 0.8905277296960459,
-      "title": "json-server",
-      "author": "typicode"
-    },
-    {
-      "id": 0.4550172478420733,
-      "title": "json-server",
-      "author": "typicode"
-    },
-    {
-      "id": 0.22439626140836255,
-      "title": "json-server",
-      "author": "typicode"
+      "title": "12345",
+      "id": 0.2836536959170419
     }
-  ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }

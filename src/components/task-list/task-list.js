@@ -3,12 +3,6 @@ import React from "react";
 
 export const TaskList = (props) => {
 
-    // let classNames = 'todo-text';
-    // if (this.props.isEditable) {
-    //     classNames += ' editable';
-    // }
-    //setTimeout(() => console.log(this.props.isEditable, this.state.tasks[0].isEditable), 1000);
-
     const {tasks} = props;
 
     return (

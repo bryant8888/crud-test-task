@@ -1,149 +1,120 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 import axios from 'axios';
-import ContentEditable from "react-contenteditable";
 import {TaskEntity} from "./entities/task-entity";
 import TaskAddForm from './components/task-add-form';
-import {TaskListItem} from "./components/task-list-item/task-list-item";
 import {TaskList} from "./components/task-list/task-list";
 
-class App extends Component {
-  state = {
+class App extends React.Component {
+    state = {
         tasks: [],
-        //editable: false,
         title: ''
-  };
+    };
 
-  //Получение данных с сервера
-  componentDidMount() {
-    axios.get('http://localhost:3000/posts')
-         .then((response) => {
-             console.log(response.data);
-             this.setState({tasks: response.data.map(data => new TaskEntity(data.title, data.id, false))}, () => {
-                 console.log(this.state.tasks);
-             });
-         }, (error) => console.log(error));
-  }
-
-
-  //Отображение данных в input
-  handleChange = event => {
-      console.log(event.target.value);
-      this.setState({ title: event.target.value });
-  };
+    //Получение данных с сервера
+    componentDidMount() {
+        axios.get('http://localhost:3000/posts')
+            .then((response) => {
+                this.setState({
+                    tasks: response.data.map(data => new TaskEntity(data.title, data.id, false))
+                });
+            }, (error) => console.log(error));
+    }
 
 
-  // handleSubmit = (title) => {
-  //     console.log(title);
-  //
-  // };
+    //Отображение данных в input
+    handleChange = event => {
+        this.setState({title: event.target.value});
+    };
 
 
-  handleChangeTask = (id, event) => {
-      console.log(id, event);
-      const idx = this.state.tasks.findIndex((el) => el.id === id);
-      const changeTask = { title: event.target.value, id: id, isEditable: !this.state.tasks.isEditable };
-      const newArray = [
-          ...this.state.tasks.slice(0, idx),
-          changeTask,
-          ...this.state.tasks.slice(idx + 1)
-      ];
-      this.setState({
-          tasks: newArray //.map(data => new TaskEntity(data.title, data.id, !data.isEditable))
-      }, () => console.log(this.state.tasks));
+    //Редактирование таски
+    handleChangeTask = (id, event) => {
+        const idx = this.state.tasks.findIndex((el) => el.id === id);
+        const changeTask = {title: event.target.value, id: id, isEditable: !this.state.tasks.isEditable};
+        const newArray = [
+            ...this.state.tasks.slice(0, idx),
+            changeTask,
+            ...this.state.tasks.slice(idx + 1)
+        ];
+        this.setState({
+            tasks: newArray
+        });
+    };
 
-  };
+    //переключение режиме редактирования у таски
+    editSubmit = (id) => {
+        const idx = this.state.tasks.findIndex((el) => el.id === id);
+        const oldTask = this.state.tasks[idx];
+        const newTask = {...oldTask, isEditable: !oldTask.isEditable};
+        const newArray = [
+            ...this.state.tasks.slice(0, idx),
+            newTask,
+            ...this.state.tasks.slice(idx + 1)
+        ];
 
-  //Добавление новой задачи
-  handleSubmit = () => {
+        axios
+            .put(`http://localhost:3000/posts/${id}`, newTask)
+            .then((response) => {
+                this.setState({tasks: newArray});
+            });
+    };
 
-      const newTask = {
-          title: this.state.title,
-          "id": Math.random()
-      };
+    //Добавление новой таски
+    handleSubmit = () => {
+        const newTask = {
+            title: this.state.title,
+            "id": Math.random()
+        };
 
-      axios
-          .post('http://localhost:3000/posts', newTask)
-          .then((response) => {
-              console.log(response.data);
-              const addedTask = {title: response.data.title, id: response.data.id};
-              const updatedTasksList = this.state.tasks.concat([addedTask]);
+        axios
+            .post('http://localhost:3000/posts', newTask)
+            .then((response) => {
+                const addedTask = {title: response.data.title, id: response.data.id};
+                const updatedTasksList = this.state.tasks.concat([addedTask]);
+                this.setState({tasks: updatedTasksList});
+            });
+    };
 
-              this.setState({ tasks: updatedTasksList });
-          });
-  };
+    //Удаление таски
+    deleteSubmit = (id) => {
+        const idx = this.state.tasks.findIndex((el) => el.id === id);
+        const before = this.state.tasks.slice(0, idx);
+        const after = this.state.tasks.slice(idx + 1);
 
-  //Редактирование задачи
-  editSubmit = (id) => {
-          const idx = this.state.tasks.findIndex((el) => el.id === id);
-          const oldTask = this.state.tasks[idx];
-          const newTask = {...oldTask, isEditable: !oldTask.isEditable};
-          const newArray = [
-              ...this.state.tasks.slice(0, idx),
-              newTask,
-              ...this.state.tasks.slice(idx + 1)
-          ];
-          console.log(newArray);
+        const newArray = [...before, ...after];
 
-          axios
-              .put(`http://localhost:3000/posts/${id}`, newTask )
-              .then((response) => {
-                   console.log(response.data);
+        axios
+            .delete(`http://localhost:3000/posts/${id}`)
+            .then((response) => {
+                this.setState({
+                    tasks: newArray.map(data => new TaskEntity(data.title, data.id, false))
+                });
+            });
+    };
 
-                   this.setState({ tasks: newArray });
-              });
-          // return {
-          //     tasks: newArray //.map(data => new TaskEntity(data.title, data.id, !data.isEditable))
-          // }
-          //{ editable: !this.state.editable }
-  };
-
-  deleteSubmit = (id) => {
-      const idx = this.state.tasks.findIndex((el) => el.id === id);
-      const before = this.state.tasks.slice(0, idx);
-      const after = this.state.tasks.slice(idx + 1);
-
-      const newArray = [...before, ...after];
-
-      axios
-          .delete(`http://localhost:3000/posts/${id}`)
-          .then((response) => {
-              // const addedTask = {title: response.data.title, id: response.data.id};
-              // const updatedTasksList = this.state.tasks.concat([addedTask]);
-
-              this.setState({
-                  tasks: newArray.map(data => new TaskEntity(data.title, data.id, false))
-              }, () => console.log(this.state.tasks));
-          });
-
-  };
+    // рендерит заголовок таски, в противном случае пустую строку(для избегания throw Error)
+    titleHTML(task) {
+        return task && task.title ? task.title : '';
+    }
 
 
-  listGroupStyle() {
-    return (this.state.editable ? 'todo-text editable' : 'todo-text');
-  }
-
-  titleHTML(task) {
-      return task && task.title ? task.title : '';
-  }
-
-  render() {
-
-    return (
-      <div className="app-todo">
-        <h1>My todo List</h1>
-        <TaskAddForm
-            handleSubmit={this.handleSubmit.bind(this)}
-            handleChange={this.handleChange.bind(this)}/>
-        <TaskList
-            handleChangeTask={this.handleChangeTask}
-            editSubmit={this.editSubmit}
-            deleteSubmit={this.deleteSubmit}
-            tasks={this.state.tasks}
-            titleHTML={this.titleHTML}/>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="app-todo">
+                <h1>My todo List</h1>
+                <TaskAddForm
+                    handleSubmit={this.handleSubmit.bind(this)}
+                    handleChange={this.handleChange.bind(this)}/>
+                <TaskList
+                    handleChangeTask={this.handleChangeTask}
+                    editSubmit={this.editSubmit}
+                    deleteSubmit={this.deleteSubmit}
+                    tasks={this.state.tasks}
+                    titleHTML={this.titleHTML}/>
+            </div>
+        );
+    }
 }
 
 export default App;

@@ -12,10 +12,6 @@ export default class TaskAddForm extends React.Component {
                       event.preventDefault();
                       return this.props.handleSubmit.bind(this)();
                   }}>
-                {/*<input type="text"*/}
-                       {/*className="form-control add-input"*/}
-                       {/*onChange={this.props.handleChange}*/}
-                       {/*placeholder="write a new task" />*/}
                 <UInput onChange={this.props.handleChange}/>
                 <UButton type={'submit'} colorScheme={'success'}>Add Task</UButton>
             </form>
